@@ -11,6 +11,7 @@ import SplitPlugin from "@/plugins/split/src/split.plugin.js";
 import BimObjectPlugin from "@/plugins/bimobject/src/bimobject.plugin.js";
 import bimdataDesignSystem from "@/plugins/bimdataDesignSystem/src/bimdataDesignSystem.plugin.js";
 import { mapGetters } from "vuex";
+import realiz3D from "@/plugins/realiz3D/src/realiz3D.plugin.js";
 
 export default {
   components: {
@@ -34,7 +35,8 @@ export default {
       SnowflakesPlugin,
       SplitPlugin,
       BimObjectPlugin,
-      bimdataDesignSystem
+      bimdataDesignSystem,
+      realiz3D
     ]);
   }
 };
