@@ -1,7 +1,6 @@
 <script>
 const cloudUrlMap = {
   3059: "https://cloud.realiz3d.fr/dashboard/start/socotec",
-  129: "https://cloud.realiz3d.fr/dashboard/start/socotec",
   3311: "https://cloud.realiz3d.fr/dashboard/start/Socotec_rennes",
 };
 
