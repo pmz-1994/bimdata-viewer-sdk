@@ -1,5 +1,5 @@
 {
-  "name": "realiz3D",
+  "name": "@bimdata/realiz3d-viewer-plugin",
   "version": "0.0.1",
   "description": "realiz3D BIMData Viewer Plugin",
   "scripts": {

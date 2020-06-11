@@ -1,5 +1,5 @@
 import Realiz3DComponent from './Realiz3D.vue';
-import icon from '../assets/icon.svg';
+import icon from '../assets/logo.png';
 
 export default {
   name: 'Realiz3DPlugin', // The name of the plugin. this.$plugins.MyPluginName to access it from other plugins

@@ -1,9 +1,10 @@
-<template>
-  <!-- https://vuejs.org/v2/guide/syntax.html -->
-  <div></div>
-</template>
-
 <script>
+const cloudUrlMap = {
+  3059: "https://cloud.realiz3d.fr/dashboard/start/socotec",
+  129: "https://cloud.realiz3d.fr/dashboard/start/socotec",
+  3311: "https://cloud.realiz3d.fr/dashboard/start/Socotec_rennes",
+};
+
 export default {
   // https://vuejs.org/v2/guide/components.html
   name: "realiz3D",
@@ -41,16 +42,7 @@ export default {
   },
   created() {
     const cloudId = parseInt(this.$utils.getCloudId());
-    console.log(cloudId)
-    if (cloudId === 3059 || cloudId === 129) {
-      this.iframeUrl = "https://cloud.realiz3d.fr/dashboard/start/socotec";
-    } else if (cloudId === 3311) {
-      this.iframeUrl = "https://cloud.realiz3d.fr/dashboard/start/Socotec_rennes";
-    }
+    this.iframeUrl = cloudUrlMap[cloudId] || "";
   }
 };
 </script>
-
-<style type="scss" scoped>
-/* https://vue-loader.vuejs.org/guide/scoped-css.html#mixing-local-and-global-styles */
-</style>
