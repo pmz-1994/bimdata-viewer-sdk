@@ -15,13 +15,13 @@ export default {
   },
   methods: {
     downloadGltf() {
-      const ifc = this.$utils.getSelectedIfcs()[0]
+      const ifc = this.$viewer.state.ifcs[0];
       window.location.href = ifc.gltf_file;
     }
   }
 };
 </script>
 
-<style type="scss" scoped>
+<style lang="scss" scoped>
 /* https://vue-loader.vuejs.org/guide/scoped-css.html#mixing-local-and-global-styles */
 </style>
