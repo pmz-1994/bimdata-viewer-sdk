@@ -1,6 +1,6 @@
 {
   "name": "@bimdata/realiz3d-viewer-plugin",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "realiz3D BIMData Viewer Plugin",
   "scripts": {
     "build": "rollup -c --environment BUILD:production",
