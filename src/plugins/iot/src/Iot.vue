@@ -6,7 +6,7 @@
         class="select-content"
         :class="{ active: displayOptions }"
       >
-        <div class="system-icon" v-if="selectedSystem.name !== errorValue">
+        <div class="system-icon" v-if="selectedElement.name !== errorValue">
           <BIMDataIcon
             class="icon-success color-success"
             icon-name="successIcon"
@@ -18,7 +18,7 @@
             <BIMDataSuccessIcon />
           </BIMDataIcon>
         </div>
-        <div class="system-icon" v-if="selectedSystem.name === errorValue">
+        <div class="system-icon" v-if="selectedElement.name === errorValue">
           <BIMDataIcon
             class="icon-warning color-high"
             icon-name="warningIcon"
@@ -30,8 +30,8 @@
             <BIMDataWarningIcon />
           </BIMDataIcon>
         </div>
-        <span :class="{ error: selectedSystem.name === errorValue }">
-          {{ selectedSystem && selectedSystem.name }}
+        <span :class="{ error: selectedElement.name === errorValue }">
+          {{ selectedElement && selectedElement.name }}
         </span>
         <div class="select-icon">
           <BIMDataIcon
@@ -47,14 +47,14 @@
         </div>
       </div>
       <transition name="slide-fade-up">
-        <ul v-show="displayOptions" class="bimdata-list" v-if="systems">
+        <ul v-show="displayOptions" class="bimdata-list" v-if="elements">
           <li
             @click="displayOptions = false"
-            v-for="system in systems"
-            :key="system.uuid"
-            :class="{ error: system.uuid === errorObjectId }"
+            v-for="element in elements"
+            :key="element.uuid"
+            :class="{ error: element.uuid === errorObjectId }"
           >
-            <div v-if="system.uuid !== errorObjectId">
+            <div v-if="element.uuid !== errorObjectId">
               <BIMDataIcon
                 class="icon-chevron color-success"
                 icon-name="successIcon"
@@ -66,7 +66,7 @@
                 <BIMDataSuccessIcon />
               </BIMDataIcon>
             </div>
-            <div v-if="system.uuid === errorObjectId">
+            <div v-if="element.uuid === errorObjectId">
               <BIMDataIcon
                 class="icon-chevron color-high"
                 icon-name="warningIcon"
@@ -81,12 +81,12 @@
 
             <input
               type="radio"
-              v-model="selectedSystem"
+              v-model="selectedElement"
               :name="`system-iot-${_uid}`"
-              :id="system.uuid"
-              :value="system"
+              :id="element.uuid"
+              :value="element"
             />
-            <label>{{ system.name }}</label>
+            <label>{{ element.name }}</label>
           </li>
         </ul>
       </transition>
@@ -134,7 +134,9 @@ export default {
     return {
       series: [],
       systems: [],
+      elements: [],
       selectedSystem: null,
+      selectedElement: null,
       errorValue: "Tableau éléctrique:L1000XH800 P300:631661",
       errorObjectId: "0vNFceMkb8dezQiQhWAOcS",
       displayOptions: false,
@@ -170,29 +172,34 @@ export default {
   },
   watch: {
     async selectedSystem(newSelectedSystem) {
+      console.log({newSelectedSystem})
       if (newSelectedSystem) {
         this.$hub.emit("fit-view-objects", { ids: [newSelectedSystem.uuid] });
         this.$hub.emit("deselect-objects", { ids: this.$utils.getSelectedObjectIds()});
         this.$hub.emit("select-objects", { ids: [newSelectedSystem.uuid]});
         this.loading = true;
-        await this.getSystemData(newSelectedSystem.uuid);
+        await this.getElementData(newSelectedSystem.uuid);
         this.loading = false;
       }
     },
-    selectedIfcs() { // TODO POC only
-      if (this.systems.length === 0) {
-        this.getSystems();
-      }
-    }
+    // selectedIfcs() { // TODO POC only
+    //   if (this.systems.length === 0) {
+    //     this.getSystems();
+    //   }
+    // }
   },
   created() {
-    this.$emit("set-active");
-    this.getSystems();
-    this.$hub.on("select-objects", this.onObjectsSelected);
+    this.$hub.on('3d-model-loaded', () => {
+      this.$emit("set-active");
+      setTimeout(this.getSystems , 2000)
+      this.$hub.on("select-objects", this.onObjectsSelected);
+    })
   },
   methods: {
     onObjectsSelected({ids}) {
       const selectedSystemsIds = Array.from(ids).filter(id => this.systems.some(system => system.uuid === id));
+      console.log(this.systems, this.elements)
+      
       if (selectedSystemsIds.length > 0) {
         this.selectedSystem = this.systems.find(system => system.uuid === selectedSystemsIds[0]);
       }
@@ -223,7 +230,7 @@ export default {
         };
       }
     },
-    async getSystemData(systemId) {
+    async getElementData(systemId) {
       this.series = [];
       const res = await fetch(`${this.iotUrl}/element/${systemId}/meter`, { headers: this.headers });
       const meters = await res.json();
@@ -232,28 +239,29 @@ export default {
       this.series = series.filter(Boolean);
     },
     async getSystems() {
-      const ifcs = this.$utils.getSelectedIfcs();
-      const ifc = ifcs.find(ifc => ifc.name == "Mirabeau_ELEC.ifc") // When there is more than one ifc
-      if (ifc && ifc.systems_file) {
-        const systemsRes = await fetch(ifc.systems_file).then((res) => res.json());
-        this.systems = systemsRes && systemsRes.systems && systemsRes.systems[0].children;
-        // const ifcApi = new this.$bimdataApiClient.IfcApi();
-        // this.systems = await ifcApi.getSystems(
-        //   this.$utils.getCloudId(),
-        //   ifc.id,
-        //   this.$utils.getProjectId()
-        // );
-        if (this.systems && this.systems.length) {
-          this.selectedSystem = this.systems[0];
-          this.$hub.emit("colorize-objects", {
-            ids: [this.selectedSystem.uuid],
-            color: [0, 1, 0],
-          });
-          this.$hub.emit("colorize-objects", {
-            ids: ["0vNFceMkb8dezQiQhWAOcS"],
-            color: [1, 0, 0],
-          });
-        }
+      const id = this.$utils.getIfcIdOf("0vNFceMkb8dezQiQhWAOcS");
+      const ifcApi = new this.$bimdataApiClient.IfcApi();
+      this.systems = await ifcApi.getSystems(
+        this.$utils.getCloudId(),
+        id,
+        this.$utils.getProjectId()
+      );
+      if (this.systems && this.systems.length) {
+
+        this.selectedSystem = this.systems.find(system => system.elements.includes("0vNFceMkb8dezQiQhWAOcS"));
+        this.selectedSystem.elements.forEach((element_id) => {
+          this.elements.push(this.$utils.getObject(element_id))
+        })
+        this.selectedElement = this.elements[0]
+        this.$hub.emit("colorize-objects", {
+          ids: [this.selectedElement.uuid],
+          color: [0, 1, 0],
+        });
+        this.$hub.emit("colorize-objects", {
+          ids: ["0vNFceMkb8dezQiQhWAOcS"],
+
+          color: [1, 0, 0],
+        });
       }
     },
   },
@@ -261,8 +269,8 @@ export default {
 </script>
 
 <style lang="scss">
-@import "node_modules/chartist/dist/chartist.min.css";
-@import "node_modules/@bimdata/design-system/dist/scss/BIMData.scss";
+@import "../node_modules/chartist/dist/chartist.min.css";
+@import "../node_modules/@bimdata/design-system/dist/scss/BIMData.scss";
 
 .bimdata-iot {
   .select {
