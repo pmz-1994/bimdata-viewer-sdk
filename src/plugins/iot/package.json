@@ -1,13 +1,13 @@
 {
-  "name": "@bimdata/bimobject-viewer-plugin",
-  "version": "1.0.2",
-  "description": "bimobject BIMData Viewer Plugin",
+  "name": "@bimdata/iot-viewer-plugin",
+  "version": "1.0.10",
+  "description": "iot BIMData Viewer Plugin",
   "scripts": {
     "build": "rollup -c --environment BUILD:production",
     "watch": "rollup --watch -c",
     "prepublishOnly": "npm run build"
   },
-  "main": "dist/bimobject.plugin.js",
+  "main": "dist/iot.plugin.js",
   "files": [
     "dist"
   ],
@@ -15,12 +15,17 @@
     "BIMData",
     "Viewer",
     "Plugin",
-    "bimobject"
+    "iot"
   ],
   "devDependencies": {
-    "@bimdata/design-system": "^1.1.0",
+    "@bimdata/design-system": "1.4.0-rc.16",
+    "@rollup/plugin-image": "^2.1.1",
     "@rollup/plugin-node-resolve": "^13.0.5",
+    "@rollup/plugin-replace": "^4.0.0",
     "@rollup/plugin-url": "^6.0.0",
+    "chartist": "^0.11.4",
+    "chartist-plugin-tooltips-updated": "^0.1.3",
+    "chartist-plugin-zoom": "^0.6.0",
     "rollup": "^2.35.1",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-scss": "^3.0.0",
