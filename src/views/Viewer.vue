@@ -8,19 +8,21 @@
 import { mapGetters } from "vuex";
 import makeBIMDataViewer from "@bimdata/viewer";
 
-import backgroundColor from "@/plugins/backgroundColor/src/backgroundColor.plugin.js";
-import BimObjectPlugin from "@/plugins/bimobject/src/bimobject.plugin.js";
-import bsdd from "@/plugins/bsdd/src/bsdd.plugin.js";
-import ChristmasSleighPlugin from "@/plugins/christmasSleigh/src/christmasSleigh.plugin.js";
-import excelExportPlugin from "@/plugins/excelExport/src/excelExport.plugin.js";
-import GltfExtractorPlugin from "@/plugins/gltfExtractor/src/gltfExtractor.plugin.js";
-import HolusionPlugin from "@/plugins/holusion/src/holusion.plugin.js";
-import iotPlugin from "@/plugins/iot/src/iot.plugin.js";
-import kroqiBcfService from "@/plugins/kroqiBcfService/src/kroqiBcfService.plugin.js";
-import platformDemo from "@/plugins/platformDemo/src/platformDemo.plugin.js";
-import SnowflakesPlugin from "@/plugins/snowflakes/src/snowflakes.plugin.js";
-import SplitPlugin from "@/plugins/split/src/split.plugin.js";
-import SvgExtractorPlugin from "@/plugins/svgExtractor/src/svgExtractor.plugin.js";
+import BimObjectPlugin from "@bimdata/bimobject-viewer-plugin";
+import bsdd from "@bimdata/bsdd-viewer-plugin";
+import ChristmasSleighPlugin from "@bimdata/christmas-sleigh-viewer-plugin";
+import excelExportPlugin from "@bimdata/excel-export-plugin";
+import Giro3dPlugin from "@bimdata/giro3d-viewer-plugin";
+import GltfExtractorPlugin from "@bimdata/gltf-extractor-viewer-plugin";
+import kroqiBcfService from "@bimdata/bcf-kroqi-premium-service";
+import platformDemo from "@bimdata/platform-demo-viewer-plugin";
+import SnowflakesPlugin from "@bimdata/snowflakes-viewer-plugin";
+import SvgExtractorPlugin from "@bimdata/svg-extractor-viewer-plugin";
+
+import iotEquipment from "@bimdata/iot-equipment-viewer-plugin";
+import iframeShare from "@bimdata/iframe-share-viewer-plugin";
+import bimworld from "@bimdata/bimworld-viewer-plugin";
+import iot from "@bimdata/iot-viewer-plugin";
 
 export default {
   data() {
@@ -37,8 +39,8 @@ export default {
       api: {
         cloudId: this.$route.query.cloudId,
         projectId: this.$route.query.projectId,
-        ifcIds: [this.$route.query.ifcId],
-        apiUrl: process.env.VUE_APP_BIMDATA_API_URL,
+        modelIds: [this.$route.query.modelId],
+        apiUrl: import.meta.env.VITE_APP_BIMDATA_API_URL,
         accessToken: this.oidcAccessToken,
       },
       plugins: {
@@ -52,20 +54,21 @@ export default {
       },
     });
 
-    // bimdataViewer.registerPlugin(backgroundColor);
     bimdataViewer.registerPlugin(BimObjectPlugin);
     bimdataViewer.registerPlugin(bsdd);
     bimdataViewer.registerPlugin(ChristmasSleighPlugin);
     bimdataViewer.registerPlugin(excelExportPlugin);
+    bimdataViewer.registerPlugin(Giro3dPlugin);
     bimdataViewer.registerPlugin(GltfExtractorPlugin);
-    bimdataViewer.registerPlugin(HolusionPlugin);
-    bimdataViewer.registerPlugin(iotPlugin);
     bimdataViewer.registerPlugin(kroqiBcfService);
     bimdataViewer.registerPlugin(platformDemo);
     bimdataViewer.registerPlugin(SnowflakesPlugin);
-    bimdataViewer.registerPlugin(SplitPlugin);
     bimdataViewer.registerPlugin(SvgExtractorPlugin);
 
+    bimdataViewer.registerPlugin(iotEquipment);
+    bimdataViewer.registerPlugin(iframeShare);
+    bimdataViewer.registerPlugin(bimworld);
+    bimdataViewer.registerPlugin(iot);
 
     bimdataViewer.mount(`#${this.viewerId}`);
 

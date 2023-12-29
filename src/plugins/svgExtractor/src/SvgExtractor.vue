@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import { BIMDataButton } from "@bimdata/design-system/components.js";
+import { BIMDataButton } from "@bimdata/design-system/dist/js/BIMDataComponents/vue3/index.js";
 
 export default {
   // https://vuejs.org/v2/guide/components.html
@@ -21,9 +21,9 @@ export default {
   },
   methods: {
     downloadSvg() {
-      const ifc = this.$viewer.state.ifcs[0];
-      if (ifc.map_file) {
-        window.location.href = ifc.map_file;
+      const model = this.$viewer.state.models[0];
+      if (model.map_file) {
+        window.location.href = model.map_file;
       } else {
         this.$viewer.localContext.hub.emit("alert", {
           type: "error",

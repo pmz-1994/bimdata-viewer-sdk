@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import BIMDataTabs from "../node_modules/@bimdata/design-system/dist/js/BIMDataComponents/BIMDataTabs.js";
+import { BIMDataTabs } from "@bimdata/design-system/dist/js/BIMDataComponents/vue3/index.js";
 
 import ManageTab from "./manage-tab/ManageTab.vue";
 import ShareTab from "./share-tab/ShareTab.vue";
@@ -83,8 +83,8 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import "../node_modules/@bimdata/design-system/dist/css/design-system.css";
-@import "../node_modules/@bimdata/design-system/dist/scss/_BIMDataTransitions.scss";
+@import "@bimdata/design-system/dist/css/design-system.css";
+@import "@bimdata/design-system/dist/scss/_BIMDataTransitions.scss";
 
 .iframe-share {
   display: block;

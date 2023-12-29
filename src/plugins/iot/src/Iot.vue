@@ -1,5 +1,5 @@
 <template>
-  <div class="bimdata-iot m-y-12 p-x-12">
+  <div class="bimdata-iot p-y-12 p-x-12">
     <div class="select">
       <div
         @click="displayOptions = !displayOptions"
@@ -70,7 +70,7 @@ import Graph from "./Graph.vue";
 import {
   BIMDataIcon,
   BIMDataLoading,
-} from "@bimdata/design-system/components.js";
+} from "@bimdata/design-system/dist/js/BIMDataComponents/vue3/index.js";
 export default {
   name: "iot",
   components: {
@@ -106,7 +106,7 @@ export default {
   created() {
     this.viewer3dPlugin = this.$viewer.globalContext.getPlugins("viewer3d")[0];
     this.$viewer.localContext.hub.once("3d-model-loaded", () => {
-      console.log('model loaded')
+      console.log("model loaded");
       this.$open();
       this.getMonitoredElements();
     });
@@ -177,7 +177,7 @@ export default {
       const ifcs = this.$viewer.state.ifcs;
       const ifc = ifcs.find(ifc => ifc.name.startsWith("Mirabeau_ELEC")); // When there is more than one ifc
       if (ifc) {
-        const apiClient = new this.$viewer.api.apiClient.IfcApi();
+        const apiClient = this.$viewer.api.apiClient.modelApi;
         const systems = await apiClient.getSystems(
           this.$viewer.api.cloudId,
           ifc.id,
@@ -206,12 +206,11 @@ export default {
 </script>
 
 <style lang="scss">
-// For some unknown reasons, rollup doesn't find ../node_modules/chartist/dist/chartist.min.css but only finds ./node_modules/chartist/dist/chartist.min.css (one less dot ate the beginning)
-// so ../ works when trying live with webpack, and silently fails when building with rollup.
-// A replace is used the rollup.config.js to workaround this bug
-@import "../node_modules/chartist/dist/chartist.min.css";
-@import "../node_modules/@bimdata/design-system/dist/scss/_BIMDataVariables.scss";
+@import "chartist/dist/chartist.min.css";
+@import "@bimdata/design-system/dist/scss/_BIMDataVariables.scss";
 .bimdata-iot {
+  height: 100%;
+  overflow: auto;
   .select {
     position: relative;
     &-content {
@@ -340,7 +339,7 @@ export default {
     .ct-series-a {
       .ct-line,
       .ct-point {
-        stroke: var(--color-neutral);
+        stroke: #205dbd;
       }
     }
     .ct-series-b {
